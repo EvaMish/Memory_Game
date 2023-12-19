@@ -39,19 +39,14 @@ data class MemoryCard(
     val content: Int,
     var isFaceUp: Boolean = false,
     var isMatched: Boolean = false
-)
+){
+    fun isContentMatch(other: MemoryCard): Boolean {
+        return this.content == other.content
+    }
+}
 
 var countOpen: Int = 0
-val cardContent =
-    listOf(
-        R.drawable.ic_cat,
-        R.drawable.ic_dog,
-        R.drawable.ic_tree,
-        R.drawable.ic_sun,
-        R.drawable.ic_android,
-        R.drawable.ic_flower,
 
-        )
 
 @Composable
 fun MemoryGame() {
@@ -87,6 +82,7 @@ fun MemoryGame() {
                                     this[indexOf(card)] = card.copy(isFaceUp = !card.isFaceUp)
                                 }
                                 countOpen++
+
                                 if(countOpen==2){
 
                                 }
@@ -131,6 +127,7 @@ fun MemoryCardItem(card: MemoryCard, onCardClicked: () -> Unit) {
         ) {
             if (card.isFaceUp) {
                 Image(painter = painterResource(id = card.content), contentDescription = "")
+                //Text(text = card.content.toString())
             }
         }
     }

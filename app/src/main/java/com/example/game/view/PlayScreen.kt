@@ -1,5 +1,6 @@
 package com.example.game.view
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,17 +30,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.game.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 data class MemoryCard(
     val id: Int,
     val content: Int,
     var isFaceUp: Boolean = false,
     var isMatched: Boolean = false
-){
+) {
     fun isContentMatch(other: MemoryCard): Boolean {
         return this.content == other.content
     }
@@ -52,14 +57,15 @@ var countOpen: Int = 0
 fun MemoryGame() {
     var cards by remember { mutableStateOf(generateCards()) }
     var isGameOver by remember { mutableStateOf(false) }
+    var selectedCards by remember { mutableStateOf(emptyList<MemoryCard>()) }
 
     LaunchedEffect(cards) {
         if (cards.all { it.isFaceUp }) {
             isGameOver = true
         }
     }
-  Text(text = "count open ${countOpen.toString()} ")
-
+    Text(text = "count open ${countOpen.toString()} ")
+    val cont = LocalContext.current
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -67,6 +73,7 @@ fun MemoryGame() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
         LazyColumn {
             items(cards.chunked(4)) { row ->
                 Row(
@@ -75,25 +82,55 @@ fun MemoryGame() {
                         .padding(4.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    row.map { card ->
+                    row.forEach { card ->
                         MemoryCardItem(card) {
-                            if (!card.isFaceUp) {
+                            if (!card.isFaceUp && selectedCards.size < 2) {
+                                selectedCards = selectedCards + card.copy(isFaceUp = true)
                                 cards = cards.toMutableList().apply {
                                     this[indexOf(card)] = card.copy(isFaceUp = !card.isFaceUp)
                                 }
                                 countOpen++
 
-                                if(countOpen==2){
+                                if (countOpen == 2) {
+                                    countOpen = 0
 
+                                    val (firstCard, secondCard) = selectedCards
+
+                                    if (firstCard.isContentMatch(secondCard)) {
+                                        // Картинки совпали
+                                        cards = cards.map {
+                                            if (it == firstCard || it == secondCard) {
+                                                it.copy(isMatched = true)
+                                            } else {
+                                                it
+                                            }
+                                        }
+                                    } else {
+                                        // Картинки не совпали
+                                        GlobalScope.launch {
+                                            delay(300)
+                                            cards = cards.map {
+                                                if (it == firstCard || it == secondCard) {
+                                                    it.copy(isFaceUp = false)
+                                                } else {
+                                                    it
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    // Очистить выбранные карты
+                                    selectedCards = emptyList()
                                 }
-
                             }
                         }
                     }
                 }
+
+
+
             }
         }
-
         Spacer(modifier = Modifier.height(16.dp))
 
         if (isGameOver) {
@@ -102,6 +139,7 @@ fun MemoryGame() {
                 style = MaterialTheme.typography.bodyLarge
             )
         }
+
     }
 }
 

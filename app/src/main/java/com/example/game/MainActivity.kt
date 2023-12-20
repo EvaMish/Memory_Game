@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.game.ui.theme.GameTheme
+import com.example.game.view.FinishScreen
 import com.example.game.view.MemoryGame
 import com.example.game.view.StartScreen
 
@@ -22,12 +23,17 @@ class MainActivity : ComponentActivity() {
                     startDestination = "start"
                 ) {
                     composable("start") {
-                        StartScreen(navController = navController) {
-                            navController.navigate("play")
-                        }
+                        StartScreen(
+                            navController = navController,
+                            onClick = { navController.navigate("play") },
+                        )
                     }
                     composable("play") {
-                        MemoryGame()
+                        MemoryGame(navController)
+                    }
+
+                    composable("finish") {
+                        FinishScreen()
                     }
 
                 }

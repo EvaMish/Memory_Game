@@ -70,5 +70,10 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
     implementation ("io.coil-kt:coil-compose:1.4.0")
 
+
+    implementation ("androidx.activity:activity-compose:1.3.1")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.0.5")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+
     implementation ("androidx.navigation:navigation-compose:2.6.0-alpha04")
 }

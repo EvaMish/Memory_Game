@@ -19,16 +19,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.game.R
 
 
 @Composable
-fun StartScreen(navController: NavHostController, onClick: () -> Unit) {
+fun StartScreen(
+    navController: NavHostController,
+    onClick: () -> Unit,
+    ) {
 
     Box(
         modifier = Modifier
@@ -62,7 +63,6 @@ fun StartScreen(navController: NavHostController, onClick: () -> Unit) {
                     contentDescription = "coins",
                     modifier = Modifier.size(30.dp)
                 )
-                Text("sdfsdf")
             }
         }
         Column(
@@ -76,6 +76,7 @@ fun StartScreen(navController: NavHostController, onClick: () -> Unit) {
             Button(
                 onClick = {
                     onClick()
+                    navController.navigate("play")
                 },
             ) {
                 Text(
@@ -89,9 +90,3 @@ fun StartScreen(navController: NavHostController, onClick: () -> Unit) {
     }
 }
 
-
-@Preview
-@Composable
-fun ddd() {
-    StartScreen(onClick = {},  navController = rememberNavController(),)
-}

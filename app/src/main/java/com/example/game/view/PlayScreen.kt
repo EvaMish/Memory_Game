@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -45,44 +46,47 @@ data class MemoryCard(
     }
 }
 
-var countOpen: Int = 0
-var countSucsesful: Int = 0
-
-
 @Composable
-fun MemoryGame(
-    navController: NavHostController,
-    gameViewModel: GameViewModel = viewModel()
-) {
+fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel = viewModel()) {
     var cards by remember { mutableStateOf(generateCards()) }
     var isGameOver by remember { mutableStateOf(false) }
     var selectedCards by remember { mutableStateOf(emptyList<MemoryCard>()) }
     var elapsedTime by remember { mutableStateOf(0L) }
-    var earnedCoins by remember { mutableStateOf(0) }
+
+    val earnedCoinsState = gameViewModel.earnedCoins.collectAsState()
+    var earnedCoins by remember { mutableStateOf(earnedCoinsState.value) }
+
+    var totalEarnedCoins by remember { mutableStateOf(earnedCoins) }
+
+    LaunchedEffect(cards) {
+        if (cards.all { it.isFaceUp }) {
+            isGameOver = true
+        }
+    }
 
     LaunchedEffect(isGameOver) {
         while (!isGameOver) {
             delay(1000)
             elapsedTime++
+        }
 
-            if (elapsedTime <= 20) {
-                gameViewModel.earnedCoins = maxOf(100 - (elapsedTime - 1) * 5, 10).toInt()
+        earnedCoins = gameViewModel.earnedCoins.value//collectAsState()
+        // Обновите totalEarnedCoins
+        totalEarnedCoins = gameViewModel.totalEarnedCoins.value//collectAsState()
+
+        delay(1000)
+        navController.navigate("finish/$earnedCoins/$totalEarnedCoins") {
+            popUpTo("play") {
+                inclusive = true
             }
         }
     }
 
-    LaunchedEffect(cards) {
-        if (cards.all { it.isFaceUp }) {
-            isGameOver = true
-
+    LaunchedEffect(earnedCoinsState.value) {
+        if (!isGameOver) {
+            earnedCoins = earnedCoinsState.value
         }
     }
-
-    Text(
-        "Time: ${formatTime(elapsedTime)}",
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier.background(Color.Gray),
-    )
 
     Column(
         modifier = Modifier
@@ -91,6 +95,19 @@ fun MemoryGame(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+
+        Text(
+            "Time: ${formatTime(elapsedTime)}",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.background(Color.Gray),
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(
+            "Coins: $earnedCoins",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.background(Color.Gray),
+        )
+        Spacer(modifier = Modifier.height(10.dp))
 
         LazyColumn {
             items(cards.chunked(4)) { row ->
@@ -149,17 +166,16 @@ fun MemoryGame(
             )
 
             Text(
-                "Earned Coins: ${gameViewModel.earnedCoins}",
+                "Earned Coins: $earnedCoins",
                 style = MaterialTheme.typography.bodyLarge
             )
-            LaunchedEffect(isGameOver) {
-                delay(1000)
-                navController.navigate("finish")
-            }
+
         }
+//        Button(onClick = {  navController.navigate("finish/$earnedCoins/$totalEarnedCoins") }) {
+//            Text("Finish")
+//        }
     }
 }
-
 
 private fun formatTime(elapsedTime: Long): String {
     val minutes = TimeUnit.SECONDS.toMinutes(elapsedTime)

@@ -25,16 +25,23 @@ class MainActivity : ComponentActivity() {
                     composable("start") {
                         StartScreen(
                             navController = navController,
-                            onClick = { navController.navigate("play") },
+                            onClick = { navController.navigate("play")  },
                         )
+
                     }
                     composable("play") {
                         MemoryGame(navController)
                     }
+                    composable("finish/{earnedCoins}/{totalEarnedCoins}") { backStackEntry ->
+                        val earnedCoins =
+                            backStackEntry.arguments?.getString("earnedCoins")?.toIntOrNull() ?: 0
+                        val totalEarnedCoins =
+                            backStackEntry.arguments?.getString("totalEarnedCoins")?.toIntOrNull()
+                                ?: 0
+                        FinishScreen(navController = navController, earnedCoins, totalEarnedCoins)
 
-                    composable("finish") {
-                        FinishScreen()
                     }
+
 
                 }
             }

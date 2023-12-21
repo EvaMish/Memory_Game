@@ -34,8 +34,8 @@ class GameViewModel : ViewModel() {
                 delay(1000)
                 elapsedTime++
 
-                if (elapsedTime > 5) {
-                    val penalty = (elapsedTime - 5) * 5
+                if (elapsedTime > 20) {
+                    val penalty = (elapsedTime - 20) * 5
                     coins = maxOf(10, 100 - penalty).toInt()
                     _earnedCoins.value = coins
                 }

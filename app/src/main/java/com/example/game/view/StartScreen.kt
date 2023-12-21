@@ -30,9 +30,8 @@ import com.example.game.viewModels.GameViewModel
 
 @Composable
 fun StartScreen(
-    navController: NavHostController,
     onClick: () -> Unit,
-    gameViewModel: GameViewModel = viewModel()
+    gameViewModel: GameViewModel
     ) {
 
     val totalEarnedCoinsState = gameViewModel.totalEarnedCoins.collectAsState()

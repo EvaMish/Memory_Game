@@ -24,7 +24,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.game.view.components.MemoryCardItem
 import com.example.game.view.components.generateCards
@@ -47,7 +46,7 @@ data class MemoryCard(
 }
 
 @Composable
-fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel = viewModel()) {
+fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
     var cards by remember { mutableStateOf(generateCards()) }
     var isGameOver by remember { mutableStateOf(false) }
     var selectedCards by remember { mutableStateOf(emptyList<MemoryCard>()) }
@@ -56,11 +55,13 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel = 
     val earnedCoinsState = gameViewModel.earnedCoins.collectAsState()
     var earnedCoins by remember { mutableStateOf(earnedCoinsState.value) }
 
-    var totalEarnedCoins by remember { mutableStateOf(earnedCoins) }
+    var totalEarnedCoins by remember { mutableStateOf(gameViewModel.totalEarnedCoins.value) }
 
     LaunchedEffect(cards) {
         if (cards.all { it.isFaceUp }) {
             isGameOver = true
+            gameViewModel.updateGameResults(earnedCoins)
+            totalEarnedCoins = gameViewModel.totalEarnedCoins.value
         }
     }
 
@@ -68,11 +69,10 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel = 
         while (!isGameOver) {
             delay(1000)
             elapsedTime++
-        }
 
-        earnedCoins = gameViewModel.earnedCoins.value//collectAsState()
-        // Обновите totalEarnedCoins
-        totalEarnedCoins = gameViewModel.totalEarnedCoins.value//collectAsState()
+        }
+        earnedCoins = gameViewModel.earnedCoins.value
+
 
         delay(1000)
         navController.navigate("finish/$earnedCoins/$totalEarnedCoins") {
@@ -80,6 +80,9 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel = 
                 inclusive = true
             }
         }
+
+        gameViewModel.endGame()
+
     }
 
     LaunchedEffect(earnedCoinsState.value) {
@@ -104,6 +107,13 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel = 
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             "Coins: $earnedCoins",
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.background(Color.Gray),
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            "Coins2: $totalEarnedCoins",
             style = MaterialTheme.typography.bodyLarge,
             modifier = Modifier.background(Color.Gray),
         )

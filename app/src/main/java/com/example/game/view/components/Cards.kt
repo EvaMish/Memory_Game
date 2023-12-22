@@ -52,8 +52,8 @@ fun generateCards(): List<MemoryCard> {
     val cardContent =
         listOf(
             R.drawable.ic_cat,
-            R.drawable.ic_dog,
-            R.drawable.ic_tree,
+//            R.drawable.ic_dog,
+//            R.drawable.ic_tree,
 //            R.drawable.ic_sun,
 //            R.drawable.ic_android,
 //            R.drawable.ic_flower,

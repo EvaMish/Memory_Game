@@ -1,4 +1,4 @@
-package com.example.game.view
+package com.example.game.view.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -42,7 +42,7 @@ fun CenteredTextCard() {
                     text = "Game\n\nLogo №1",
                     textAlign = TextAlign.Center,
                     fontSize =35.sp,
-                    color=Color.White,
+                    color=Color.Black,
                     modifier = Modifier.padding(70.dp)
 
                 )

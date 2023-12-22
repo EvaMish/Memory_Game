@@ -22,9 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.example.game.R
+import com.example.game.view.components.CenteredTextCard
 import com.example.game.viewModels.GameViewModel
 
 
@@ -33,9 +32,6 @@ fun StartScreen(
     onClick: () -> Unit,
     gameViewModel: GameViewModel
     ) {
-
-    val totalEarnedCoinsState = gameViewModel.totalEarnedCoins.collectAsState()
-
 
     Box(
         modifier = Modifier
@@ -49,9 +45,10 @@ fun StartScreen(
                 .padding(15.dp)
         ) {
             Text(
-                text = "Background #3",
+                text = "Background#3",
                 fontSize = 25.sp,
-                modifier = Modifier.wrapContentSize()
+                modifier = Modifier.wrapContentSize(),
+                color = Color.Gray
             )
         }
 
@@ -70,7 +67,7 @@ fun StartScreen(
                     modifier = Modifier.size(30.dp)
                 )
 
-                Text("${gameViewModel.totalEarnedCoins.collectAsState().value}")
+                Text("${gameViewModel.totalEarnedCoinsDouble.collectAsState().value}")
             }
         }
         Column(
@@ -84,7 +81,7 @@ fun StartScreen(
             Button(
                 onClick = {
                     onClick()
-                  //  navController.navigate("play")
+                    gameViewModel.resetGame()
                 },
             ) {
                 Text(

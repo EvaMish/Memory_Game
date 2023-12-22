@@ -16,20 +16,23 @@ class GameViewModel : ViewModel() {
     private val _totalEarnedCoins = MutableStateFlow(0)
     val totalEarnedCoins: StateFlow<Int> = _totalEarnedCoins
 
+
+    private val _totalEarnedCoinsDouble = MutableStateFlow(0)
+    val totalEarnedCoinsDouble: StateFlow<Int> = _totalEarnedCoinsDouble
+
+
     private val gameResults = mutableListOf<Int>()
+
     private var gameJob: Job? = null // Сохраняем ссылку на job для возможности отмены
     private var isGameActive = true
+    private var elapsedTime = 0L
     private var coins = 0
 
-    init {
-        startGame()
-    }
 
     private fun startGame() {
 
         gameJob = viewModelScope.launch {
-            var elapsedTime = 0L
-
+            elapsedTime = 0L
             while (isGameActive) {
                 delay(1000)
                 elapsedTime++
@@ -46,19 +49,28 @@ class GameViewModel : ViewModel() {
     fun endGame() {
         // Завершаем текущую игру
         isGameActive = false
-
         gameJob?.cancel()
+    }
 
 
-        // Начинаем новую игру не работает
-
+    fun resetGame() {
+        // Сбрасываем все значения, кроме общей суммы
         _earnedCoins.value = 100
-        coins = 0
+        elapsedTime = 0L
         isGameActive = true
         startGame()
-
-
     }
+
+    fun doubleResults(): Int {
+        if (_earnedCoins.value == 100) {
+            _totalEarnedCoinsDouble.value = _totalEarnedCoins.value * 2
+            return _totalEarnedCoinsDouble.value
+        } else {
+            _totalEarnedCoinsDouble.value = _totalEarnedCoins.value  // обновляем значение
+            return _totalEarnedCoins.value
+        }
+    }
+
 
     fun updateGameResults(result: Int) {
         gameResults.add(result)

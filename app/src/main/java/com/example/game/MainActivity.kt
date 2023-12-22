@@ -38,13 +38,9 @@ class MainActivity : ComponentActivity() {
                     composable("play") {
                         MemoryGame(navController,gameViewModel)
                     }
-                    composable("finish/{earnedCoins}/{totalEarnedCoins}") { backStackEntry ->
-                        val earnedCoins =
-                            backStackEntry.arguments?.getString("earnedCoins")?.toIntOrNull() ?: 0
-                        val totalEarnedCoins =
-                            backStackEntry.arguments?.getString("totalEarnedCoins")?.toIntOrNull()
-                                ?: 0
-                        FinishScreen(navController = navController, earnedCoins, totalEarnedCoins)
+                    composable("finish") {
+
+                        FinishScreen(navController = navController, gameViewModel)
 
                     }
 

@@ -21,29 +21,32 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.*
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.game.R
-import com.example.game.view.components.CenteredTextCard
 import com.example.game.viewModels.GameViewModel
 
 @Composable
-fun FinishScreen(navController: NavHostController, gameViewModel: GameViewModel) {
-    var isButtonClick by remember { mutableStateOf(false) }
+fun FinishScreen(
+    navController: NavHostController,
+    gameViewModel: GameViewModel,
+) {
+
+    val earnedCoins by gameViewModel.earnedCoins.collectAsState()
 
     Box(
         modifier = Modifier
@@ -122,8 +125,7 @@ fun FinishScreen(navController: NavHostController, gameViewModel: GameViewModel)
                         )
 
                         Text(
-                            text = if (isButtonClick) " ${gameViewModel.totalEarnedCoinsDouble.collectAsState().value}"
-                            else " ${gameViewModel.totalEarnedCoins.collectAsState().value}",
+                            " $earnedCoins",
                             modifier = Modifier.padding(10.dp),
                             fontSize = 20.sp,
                         )
@@ -135,9 +137,7 @@ fun FinishScreen(navController: NavHostController, gameViewModel: GameViewModel)
 
                 Row {
                     Button(onClick = {
-                        isButtonClick = true
                         gameViewModel.doubleResults()
-
                     }) {
 
                         Text(text = "Double Reward", fontSize = 20.sp, color = Color.White)

@@ -82,7 +82,8 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
     LaunchedEffect(cards) {
         if (cards.all { it.isFaceUp }) {
             isGameOver = true
-            gameViewModel.updateGameResults(earnedCoins)
+
+           // gameViewModel.updateGameResults(earnedCoins)
             totalEarnedCoins = gameViewModel.totalEarnedCoins.value
             gameViewModel.endGame()
 
@@ -172,7 +173,7 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
                         )
 
                     Text(
-                        "${gameViewModel.totalEarnedCoinsDouble.collectAsState().value}",
+                       text =" ${gameViewModel.totalEarnedCoins.collectAsState().value}",
                         fontSize = 20.sp,
                     )
 

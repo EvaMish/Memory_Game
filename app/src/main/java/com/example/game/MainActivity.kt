@@ -3,6 +3,10 @@ package com.example.game
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,6 +25,7 @@ class MainActivity : ComponentActivity() {
                 ViewModelProvider.NewInstanceFactory().create(GameViewModel::class.java)
             }
 
+
             GameTheme {
                 // A surface container using the 'background' color from the theme
                 val navController = rememberNavController()
@@ -31,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     composable("start") {
                         StartScreen(
                             onClick = { navController.navigate("play")  },
-                            gameViewModel
+                            gameViewModel,
                         )
 
                     }

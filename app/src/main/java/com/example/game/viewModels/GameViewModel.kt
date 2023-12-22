@@ -1,5 +1,9 @@
 package com.example.game.viewModels
 
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
@@ -16,10 +20,8 @@ class GameViewModel : ViewModel() {
     private val _totalEarnedCoins = MutableStateFlow(0)
     val totalEarnedCoins: StateFlow<Int> = _totalEarnedCoins
 
-
-    private val _totalEarnedCoinsDouble = MutableStateFlow(0)
-    val totalEarnedCoinsDouble: StateFlow<Int> = _totalEarnedCoinsDouble
-
+    private val _shouldRedraw = mutableStateOf(false)
+    val shouldRedraw: State<Boolean> = _shouldRedraw
 
     private val gameResults = mutableListOf<Int>()
 
@@ -59,17 +61,24 @@ class GameViewModel : ViewModel() {
         elapsedTime = 0L
         isGameActive = true
         startGame()
+
     }
 
-    fun doubleResults(): Int {
-        if (_earnedCoins.value == 100) {
-            _totalEarnedCoinsDouble.value = _totalEarnedCoins.value * 2
-            return _totalEarnedCoinsDouble.value
+    // В вашей вьюмодели
+    fun doubleResults() {
+        val currentEarnedCoins = _earnedCoins.value
+        val doubledValue = if (currentEarnedCoins > 50) {
+            _earnedCoins.value * 2
         } else {
-            _totalEarnedCoinsDouble.value = _totalEarnedCoins.value  // обновляем значение
-            return _totalEarnedCoins.value
+            currentEarnedCoins
         }
+        _earnedCoins.value = doubledValue
+        _totalEarnedCoins.value += doubledValue
+
+        println("++++++++++++${_earnedCoins.value}")
     }
+
+
 
 
     fun updateGameResults(result: Int) {

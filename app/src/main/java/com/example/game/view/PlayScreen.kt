@@ -65,16 +65,13 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
     var isGameOver by remember { mutableStateOf(false) }
     var selectedCards by remember { mutableStateOf(emptyList<MemoryCard>()) }
     var elapsedTime by remember { mutableStateOf(0L) }
-
     val earnedCoinsState = gameViewModel.earnedCoins.collectAsState()
     var earnedCoins by remember { mutableStateOf(earnedCoinsState.value) }
-
     var totalEarnedCoins by remember { mutableStateOf(gameViewModel.totalEarnedCoins.value) }
 
     LaunchedEffect(cards) {
         if (cards.all { it.isFaceUp }) {
             isGameOver = true
-
             // gameViewModel.updateGameResults(earnedCoins)
             totalEarnedCoins = gameViewModel.totalEarnedCoins.value
             gameViewModel.endGame()
@@ -86,17 +83,15 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
         while (!isGameOver) {
             delay(1000)
             elapsedTime++
-
         }
         earnedCoins = gameViewModel.earnedCoins.value
-
     }
 
-    LaunchedEffect(earnedCoinsState.value) {
-        if (!isGameOver) {
-            earnedCoins = earnedCoinsState.value
-        }
-    }
+//    LaunchedEffect(earnedCoinsState.value) {
+//        if (!isGameOver) {
+//            earnedCoins = earnedCoinsState.value
+//        }
+//    }
 
     Box(
         modifier = Modifier
@@ -235,6 +230,7 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
                         Button(
                             onClick = {
                                 openDialog.value = false
+                                gameViewModel.updateGameResults(earnedCoins)
                                 navController.navigate("finish") {
                                     popUpTo("play") {
                                         inclusive = true

@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -46,6 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.game.R
+import com.example.game.model.MemoryCard
+import com.example.game.ui.theme.daysOneFontFamily
 import com.example.game.view.components.MemoryCardItem
 import com.example.game.view.components.generateCards
 import com.example.game.viewModels.GameViewModel
@@ -55,17 +58,6 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import androidx.compose.material3.AlertDialog as AlertDialog
 
-data class MemoryCard(
-    val id: Int,
-    val content: Int,
-    var isFaceUp: Boolean = false,
-    var isMatched: Boolean = false,
-
-    ) {
-    fun isContentMatch(other: MemoryCard): Boolean {
-        return this.content == other.content
-    }
-}
 
 @Composable
 fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
@@ -83,7 +75,7 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
         if (cards.all { it.isFaceUp }) {
             isGameOver = true
 
-           // gameViewModel.updateGameResults(earnedCoins)
+            // gameViewModel.updateGameResults(earnedCoins)
             totalEarnedCoins = gameViewModel.totalEarnedCoins.value
             gameViewModel.endGame()
 
@@ -109,21 +101,9 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color(R.color.teal_0))
             .padding(20.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(15.dp)
-        ) {
-            Text(
-                text = "Background №1",
-                fontSize = 25.sp,
-                modifier = Modifier.wrapContentSize(),
-                color = Color.Gray
-            )
-        }
 
         Column(
             modifier = Modifier
@@ -145,35 +125,27 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
                         contentDescription = "",
                         modifier = Modifier.size(50.dp)
                     )
-                    Card(
-                        shape = RoundedCornerShape(15.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = colorResource(id = R.color.gray)
-                        ),
-                    ) {
-                        Text(
-                            " ${formatTime(elapsedTime)}",
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = 20.sp,
-
-                            )
-                    }
+                    Text(
+                        " ${formatTime(elapsedTime)}",
+                        fontFamily = daysOneFontFamily,
+                        color = Color.White,
+                        modifier = Modifier.padding(10.dp),
+                        fontSize = 20.sp
+                    )
                 }
-
                 Row(
                     horizontalArrangement = Arrangement.End,
                 ) {
 
-
                     Image(
                         painter = painterResource(id = R.drawable.coins),
                         contentDescription = "coins",
-                        modifier = Modifier.size(30.dp),
-
-                        )
-
+                        modifier = Modifier.size(30.dp)
+                    )
                     Text(
-                       text =" ${gameViewModel.totalEarnedCoins.collectAsState().value}",
+                        text = " ${gameViewModel.totalEarnedCoins.collectAsState().value}",
+                        fontFamily = daysOneFontFamily,
+                        color = Color.White,
                         fontSize = 20.sp,
                     )
 
@@ -189,8 +161,7 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-       // Text(text = "$earnedCoins")
-
+        // Text(text = "$earnedCoins")
         LazyColumn {
             items(cards.chunked(4)) { row ->
                 Row(
@@ -239,15 +210,6 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
                 }
             }
         }
-        Spacer(modifier = Modifier.height(35.dp))
-
-        Text(
-            "Keep matching two identical objects\n" +
-                    "until you open all the cards",
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-        )
-
         if (isGameOver) {
 
             val openDialog = remember { mutableStateOf(false) }
@@ -256,8 +218,6 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
                 openDialog.value = true
             }
 
-
-
             if (openDialog.value) {
                 AlertDialog(
                     onDismissRequest = {
@@ -265,8 +225,9 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
                     },
                     title = {
                         Text(
-                            text = "Congratulations! You've won the game!\n" +
-                                    "Earned Coins: $earnedCoins",
+                            text = "Вы выиграли $earnedCoins монет",
+                            fontSize = 15.sp,
+                            fontFamily = daysOneFontFamily,
                             textAlign = TextAlign.Center,
                         )
                     },
@@ -279,9 +240,16 @@ fun MemoryGame(navController: NavHostController, gameViewModel: GameViewModel) {
                                         inclusive = true
                                     }
                                 }
-                            }
+                            },
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(id = R.color.teal_200)
+                            )
                         ) {
-                            Text("OK", fontSize = 22.sp)
+                            Text(
+                                "OK",
+                                fontSize = 20.sp,
+                                fontFamily = daysOneFontFamily,
+                            )
                         }
                     }
                 )

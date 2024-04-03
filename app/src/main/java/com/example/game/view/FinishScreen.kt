@@ -34,10 +34,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.game.R
+import com.example.game.ui.theme.daysOneFontFamily
 import com.example.game.viewModels.GameViewModel
 
 @Composable
@@ -45,29 +47,13 @@ fun FinishScreen(
     navController: NavHostController,
     gameViewModel: GameViewModel,
 ) {
-
     val earnedCoins by gameViewModel.earnedCoins.collectAsState()
-
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color(R.color.teal_0))
             .padding(25.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(15.dp)
-        ) {
-
-            Text(
-                text = "Gameplay",
-                fontSize = 25.sp,
-                modifier = Modifier.wrapContentSize(),
-                color = Color.Gray
-            )
-        }
-
         Column(
             modifier = Modifier
                 .align(Alignment.Center),
@@ -81,85 +67,65 @@ fun FinishScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.cup),
-                    contentDescription = "won",
-                    Modifier.size(150.dp)
-                )
-
-                Text(
-                    text = "[Congratulations]",
-                    fontSize = 25.sp,
-                    modifier = Modifier.wrapContentSize(),
-                    color = Color.Black,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "[Great!You won!]",
-                    fontSize = 20.sp,
-                    modifier = Modifier
-                        .wrapContentSize()
-                        .padding(5.dp),
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.height(20.dp))
 
                 Card(
                     shape = RoundedCornerShape(15.dp),
                     colors = CardDefaults.cardColors(
-                        containerColor = colorResource(id = R.color.gray)
+                        containerColor = colorResource(id = R.color.teal_100)
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth()
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.coins),
-                            contentDescription = "coins",
-                            Modifier.size(50.dp)
-                        )
-
-                        Text(
-                            " $earnedCoins",
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = 20.sp,
-                        )
-                    }
+                    Text(
+                        text = "Поздравляем! Вы выиграли",
+                        fontFamily = daysOneFontFamily,
+                        color = Color.White,
+                        fontSize = 20.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
 
-
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.coins),
+                        contentDescription = "coins",
+                        Modifier.size(30.dp)
+                    )
+                    Text(
+                        " $earnedCoins",
+                        modifier = Modifier.padding(10.dp),
+                        fontSize = 20.sp,
+                        fontFamily = daysOneFontFamily,
+                        color = Color.White
+                    )
+                }
                 Spacer(modifier = Modifier.height(35.dp))
-
                 Row {
-                    Button(onClick = {
-                        gameViewModel.doubleResults()
-                    }) {
-
-                        Text(text = "Double Reward", fontSize = 20.sp, color = Color.White)
-                    }
-                    Spacer(modifier = Modifier.width(35.dp))
                     Button(
                         onClick = { navController.navigate("start") },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
-                        shape = RoundedCornerShape(10.dp)
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.teal_200)
+                        ),
+                        shape = RoundedCornerShape(15.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.up),
-                            contentDescription = "",
-
-                            )
+                        Text(
+                            text = "Следующий уровень",
+                            fontSize = 20.sp,
+                            fontFamily = daysOneFontFamily,
+                            color = Color.White
+                        )
                     }
                 }
-
-
             }
         }
-
     }
 }
 

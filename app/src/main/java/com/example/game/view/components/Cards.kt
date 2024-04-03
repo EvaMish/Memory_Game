@@ -14,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.game.R
-import com.example.game.view.MemoryCard
+import com.example.game.model.MemoryCard
+
 
 @Composable
 fun MemoryCardItem(card: MemoryCard, onCardClicked: () -> Unit) {
@@ -28,8 +30,8 @@ fun MemoryCardItem(card: MemoryCard, onCardClicked: () -> Unit) {
             .clickable { onCardClicked() },
         colors = CardDefaults.cardColors(
             containerColor = if (card.isFaceUp) {
-                Color.Gray
-            } else Color.LightGray,
+                Color.White
+            } else colorResource(id = R.color.teal_100),
         )
 
     ) {
@@ -41,7 +43,6 @@ fun MemoryCardItem(card: MemoryCard, onCardClicked: () -> Unit) {
         ) {
             if (card.isFaceUp) {
                 Image(painter = painterResource(id = card.content), contentDescription = "")
-                //Text(text = card.content.toString())
             }
         }
     }
@@ -52,9 +53,9 @@ fun generateCards(): List<MemoryCard> {
     val cardContent =
         listOf(
             R.drawable.ic_cat,
-//            R.drawable.ic_dog,
-//            R.drawable.ic_tree,
-//            R.drawable.ic_sun,
+            R.drawable.ic_dog,
+            R.drawable.ic_tree,
+            R.drawable.ic_sun,
 //            R.drawable.ic_android,
 //            R.drawable.ic_flower,
 //            R.drawable.ic_blueberry,

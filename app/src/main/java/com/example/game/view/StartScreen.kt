@@ -25,11 +25,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.game.R
+import com.example.game.ui.theme.daysOneFontFamily
 import com.example.game.view.components.CenteredTextCard
 import com.example.game.viewModels.GameViewModel
 
@@ -39,25 +42,12 @@ fun StartScreen(
     onClick: () -> Unit,
     gameViewModel: GameViewModel,
 ) {
-    val openDialog = remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color(R.color.teal_0))
             .padding(25.dp)
     ) {
-        Column(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .padding(15.dp)
-        ) {
-            Text(
-                text = "Background#3",
-                fontSize = 25.sp,
-                modifier = Modifier.wrapContentSize(),
-                color = Color.Gray
-            )
-        }
 
         Column(
             modifier = Modifier
@@ -65,7 +55,7 @@ fun StartScreen(
                 .padding(10.dp, 45.dp)
         ) {
             Row(
-                horizontalArrangement = Arrangement.End,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(25.dp)
             ) {
                 Image(
@@ -73,9 +63,10 @@ fun StartScreen(
                     contentDescription = "coins",
                     modifier = Modifier.size(30.dp)
                 )
-
                 Text(
                     text = "${gameViewModel.totalEarnedCoins.collectAsState().value}",
+                    color = colorResource(id = R.color.white ),
+                    fontFamily = daysOneFontFamily
                 )
             }
         }
@@ -92,54 +83,22 @@ fun StartScreen(
                     onClick()
                     gameViewModel.resetGame()
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(id = R.color.teal_200)
+                )
+
             ) {
                 Text(
-                    text = "Play",
-                    color = Color.White,
-                    fontSize = 20.sp,
+                    text = "Играть",
+                    fontSize = 15.sp,
+                    fontFamily = daysOneFontFamily,
                     modifier = Modifier.padding(7.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.height(75.dp))
-            Row(modifier = Modifier.align(Alignment.End), horizontalArrangement = Arrangement.End) {
-                Button(
-                    onClick = { openDialog.value = true },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.LightGray),
-                    shape = RoundedCornerShape(10.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.privacy),
-                        contentDescription = "",
-
-                        )
-                }
-            }
         }
     }
 
-    if (openDialog.value) {
-        AlertDialog(
-            onDismissRequest = {
-                openDialog.value = false
-            },
-            title = {
-                Text(
-                    text = "privacy policy",
-                    textAlign = TextAlign.Center,
-                )
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        openDialog.value = false
-                    }
-                ) {
-                    Text("OK", fontSize = 22.sp)
-                }
-            }
-        )
-    }
 }
 
 

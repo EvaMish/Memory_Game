@@ -47,7 +47,6 @@ fun FinishScreen(
     navController: NavHostController,
     gameViewModel: GameViewModel,
 ) {
-    val earnedCoins by gameViewModel.earnedCoins.collectAsState()
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -100,7 +99,7 @@ fun FinishScreen(
                         Modifier.size(30.dp)
                     )
                     Text(
-                        " $earnedCoins",
+                        " ${gameViewModel.totalEarnedCoins.collectAsState().value}",
                         modifier = Modifier.padding(10.dp),
                         fontSize = 20.sp,
                         fontFamily = daysOneFontFamily,
@@ -117,7 +116,7 @@ fun FinishScreen(
                         shape = RoundedCornerShape(15.dp)
                     ) {
                         Text(
-                            text = "Следующий уровень",
+                            text = "На главный экран",
                             fontSize = 20.sp,
                             fontFamily = daysOneFontFamily,
                             color = Color.White

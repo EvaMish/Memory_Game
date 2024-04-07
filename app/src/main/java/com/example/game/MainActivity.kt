@@ -38,14 +38,32 @@ class MainActivity : ComponentActivity() {
                     )
                 }
                 composable("play") {
-                    MemoryGame(navController, gameViewModel)
+                    MemoryGame(
+                        gameViewModel,
+                        2,
+                        onClick = {
+                            navController.navigate("play2")
+                            gameViewModel.resetGame()
+                        })
+                }
+                composable("play2") {
+                    MemoryGame(
+                        gameViewModel,
+                        2,
+                        onClick = {
+                            navController.navigate("play3")
+                            gameViewModel.resetGame()
+                        })
+                }
+                composable("play3") {
+                    MemoryGame(
+                        gameViewModel,
+                        2,
+                        onClick = { navController.navigate("finish") })
                 }
                 composable("finish") {
-
                     FinishScreen(navController = navController, gameViewModel)
-
                 }
-
 
             }
 

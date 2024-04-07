@@ -49,23 +49,22 @@ fun MemoryCardItem(card: MemoryCard, onCardClicked: () -> Unit) {
 }
 
 
-fun generateCards(): List<MemoryCard> {
+fun generateCards(countCards:Int): List<MemoryCard> {
     val cardContent =
         listOf(
             R.drawable.ic_cat,
             R.drawable.ic_dog,
             R.drawable.ic_tree,
             R.drawable.ic_sun,
-//            R.drawable.ic_android,
-//            R.drawable.ic_flower,
-//            R.drawable.ic_blueberry,
-//            R.drawable.ic_camera,
-//            R.drawable.ic_emoji,
-//            R.drawable.ic_cheese,
+            R.drawable.ic_android,
+            R.drawable.ic_flower,
+            R.drawable.ic_blueberry,
+            R.drawable.ic_camera,
+            R.drawable.ic_emoji,
+            R.drawable.ic_cheese)
 
-            )
-
-    val shuffledContent = (cardContent + cardContent).shuffled()
+    val subList = cardContent.subList(0, countCards)
+    val shuffledContent = (subList + subList).shuffled()
 
     return shuffledContent.mapIndexed { index, image ->
         MemoryCard(id = index, content = image)
